@@ -1,13 +1,13 @@
 import { View, TextInput, FlatList, Text, Pressable, Keyboard } from 'react-native';
-
 import { useEffect, useState } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { Todo, useTodos } from '@/components/Todo';
+import { SyncedIcon } from '@/components/SyncedIcon';
 
 export default function HomeScreen() {
     const [value, setValue] = useState("");
     const [inputOpen, setInputOpen] = useState(false);
-    const { todos, addTodo, removeTodo } = useTodos();
+    const { synced, loaded, todos, addTodo, removeTodo } = useTodos();
 
     useEffect(() => {
         const keyboardDidHideListener = Keyboard.addListener(
@@ -22,6 +22,8 @@ export default function HomeScreen() {
         addTodo(value);
         setValue("");
     }
+
+    if (!loaded) return null;
 
     return (
         <View style={{ flex: 1 }}>
@@ -39,6 +41,7 @@ export default function HomeScreen() {
                 }}>
                     Todo
                 </Text>
+                <SyncedIcon synced={synced} />
                 {todos.length === 0 && (
                     <Text style={{ color: "gray" }}>Let's add some tasks!</Text>
                 )}
